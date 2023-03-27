@@ -260,7 +260,7 @@ public class AñadirPersonas extends javax.swing.JPanel {
                                                 .addComponent(recogerID, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.PREFERRED_SIZE, 150, javax.swing.GroupLayout.PREFERRED_SIZE))
                                             .addComponent(recogerAño, javax.swing.GroupLayout.PREFERRED_SIZE, 150, javax.swing.GroupLayout.PREFERRED_SIZE)
                                             .addGroup(layout.createSequentialGroup()
-                                                .addGap(25, 25, 25)
+                                                .addGap(34, 34, 34)
                                                 .addComponent(jLabel2, javax.swing.GroupLayout.PREFERRED_SIZE, 103, javax.swing.GroupLayout.PREFERRED_SIZE)))
                                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 13, Short.MAX_VALUE)))
                                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -368,19 +368,8 @@ public class AñadirPersonas extends javax.swing.JPanel {
 
     private void button1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_button1ActionPerformed
         Persona per = new Persona();
-        for(int i=0; i<listaPersonas.size(); i++){
-            var p = listaPersonas.get(i);
-            Persona pe = (Persona) p;
-            if(pe.getID().equals(recogerID.getText())){
-                idrepetido=true;
-            }else if (recogerID.getText().equals("")){
-                idrepetido=false;
-            }   
-        }
-        
-        if(idrepetido){
-            JOptionPane.showMessageDialog(this, "Ya existe una persona con ese ID.", "error", JOptionPane.ERROR_MESSAGE);
-            idrepetido=false;
+        if(recogerID.getText().equals("") | recogerNombre.getText().equals("") | String.valueOf(jPasswordField1.getPassword()).equals("")){
+            JOptionPane.showMessageDialog(this, "Debe introducir como mínimo ID, nombre y contraseña.", "Error", JOptionPane.ERROR_MESSAGE);
         }else{
             per.setID(recogerID.getText());
             per.setNombre(recogerNombre.getText());
@@ -389,15 +378,15 @@ public class AñadirPersonas extends javax.swing.JPanel {
             per.setAñoNac(recogerAño.getText());
             per.setCorreo(recogerCorreo.getText());
             per.setContraseña(Hash.md5(String.valueOf(jPasswordField1.getPassword())));
+            if(editando){
+                tabla.setValueRow(per, fila);
+                button1.setLabel("AÑADIR");
+                editando=false;
+            }else{
+                tabla.setPersona(per);
+            }
+            limpiar();
         }
-        
-        if(editando){
-            tabla.setValueRow(per, fila);
-        }else{
-            tabla.setPersona(per);
-        }
-        
-        limpiar();
     }//GEN-LAST:event_button1ActionPerformed
 
     private void jPasswordField1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jPasswordField1ActionPerformed
@@ -415,6 +404,7 @@ public class AñadirPersonas extends javax.swing.JPanel {
         editando = true;
         fila = jTable1.getSelectedRow();
         var persona = (Persona) this.listaPersonas.get(fila);
+        button1.setLabel("EDITAR");
         recogerID.setText(persona.getID());
         recogerNombre.setText(persona.getNombre());
         recogerApe1.setText(persona.getApellido1());
